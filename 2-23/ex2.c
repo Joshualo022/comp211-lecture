@@ -10,7 +10,7 @@ int main() {
     printf("Original list: %d, %d\n", list[0], list[1]);
 
     // TODO: Use realloc to grow the 'list' to hold 4 integers
-    int* temp = __________________________________________;
+    int* temp = realloc(list, 4 * sizeof(int));
 
     if (temp != NULL) {
         list = temp;
@@ -20,7 +20,7 @@ int main() {
     }
 
     // TODO: Clean up the memory
-    ________________;
+    free(list);
 
     return 0;
 }
