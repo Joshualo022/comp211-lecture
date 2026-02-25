@@ -5,7 +5,9 @@
  * Method 1 dynamic 2D array:
  *   one contiguous allocation of rows*cols ints stored in row-major order.
  */
-static inline size_t idx(size_t i, size_t j, size_t cols) { /* TODO */ }
+static inline size_t idx(size_t i, size_t j, size_t cols) {
+    return i * cols + j;
+}
 
 static inline int in_bounds(int i, int j, int rows, int cols) {
     return (i >= 0 && i < rows && j >= 0 && j < cols);
@@ -21,17 +23,26 @@ static void die_oob(const char* fn, int i, int j, int rows, int cols) {
 }
 
 /* Set all elements of grid to 0. */
-void init_zero(int* grid, int rows, int cols) { /* TODO */ }
+void init_zero(int* grid, int rows, int cols) {
+    for (int i = 0; i < rows * cols; i++) {
+        grid[i] = 0;
+    }
+}
 
 /* Set grid[i][j] = value, with bounds checking. */
 void grid_set(int* grid, int rows, int cols, int i, int j, int value) {
-    /* TODO */
+    if (!in_bounds(i, j, rows, cols)) {
+        die_oob("grid_set", i, j, rows, cols);
+    }
+    grid[i * cols + j] = value;
 }
 
 /* Return grid[i][j], with bounds checking. */
 int grid_get(const int* grid, int rows, int cols, int i, int j) {
-    /* TODO */
-    return 0;
+    if (!in_bounds(i, j, rows, cols)) {
+        die_oob("grid_get", i, j, rows, cols);
+    }
+    return grid[i * cols + j];
 }
 
 static void print_grid(const int* grid, int rows, int cols) {

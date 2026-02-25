@@ -21,8 +21,27 @@
  *     - any allocation fails
  */
 static int** alloc2d(int rows, int cols) {
-    /* TODO */
-    return NULL;
+    if (rows <= 0 || cols <= 0) {
+        return NULL;
+    } else {
+        int** arr = malloc(rows * sizeof(int*));
+        if (arr == NULL) {
+            return NULL;
+        } else {
+            for (int i = 0; i < rows; i++) {
+                arr[i] = malloc(cols * sizeof(int));
+                if (arr[i] == NULL) {
+                    // Free previously allocated rows before returning NULL
+                    for (int j = 0; j < i; j++) {
+                        free(arr[j]);
+                    }
+                    free(arr);
+                    return NULL;
+                }
+            }
+            return arr;
+        }
+    }
 }
 
 /*
