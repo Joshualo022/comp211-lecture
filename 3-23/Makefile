@@ -156,6 +156,10 @@ unit-test: ${all_unit_tests}
 
 # Run specific groups of tests
 
+test-array: ${all_unit_tests}
+	@echo "=== RUNNING ONLY array TESTS ==="
+	${all_unit_tests} --gtest_filter=array_utils*
+
 # Run only the tests whose names match "math.add*"
 test-add: ${all_unit_tests}
 	@echo "=== RUNNING ONLY add TESTS ==="

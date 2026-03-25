@@ -46,7 +46,21 @@ void petvec_free(PetVec* v) {
  *   1 on success
  *   0 if memory allocation fails
  */
-int petvec_grow(PetVec* v) { return 0; }
+int petvec_grow(PetVec* v) {
+    if (v->size < v->capacity) {
+        return 1;  // No need to grow
+    }
+
+    size_t new_capacity = (v->capacity == 0) ? 4 : v->capacity * 2;
+    Pet* new_data = realloc(v->data, new_capacity * sizeof(Pet));
+    if (new_data == NULL) {
+        return 0;  // Allocation failed
+    }
+
+    v->data = new_data;
+    v->capacity = new_capacity;
+    return 1;  // Successfully grew the array
+}
 
 /*
  * Add a pet to the end of the vector.
@@ -73,7 +87,12 @@ int petvec_push(PetVec* v, Pet p) {
  *   pointer to the Pet if index is valid
  *   NULL if index is out of range
  */
-Pet* petvec_get(const PetVec* v, size_t index) { return NULL; }
+Pet* petvec_get(const PetVec* v, size_t index) {
+    if (index >= v->size) {
+        return NULL;  // Index out of range
+    }
+    return &v->data[index];
+}
 
 /*
  * Insert a pet at a specific index.
@@ -85,7 +104,25 @@ Pet* petvec_get(const PetVec* v, size_t index) { return NULL; }
  *   1 on success
  *   0 on invalid index or allocation failure
  */
-int petvec_insert(PetVec* v, size_t index, Pet p) { return 0; }
+int petvec_insert(PetVec* v, size_t index, Pet p) {
+    if (index > v->size) {
+        return 0;  // Invalid index
+    }
+
+    if (!petvec_grow(v)) {
+        return 0;  // Allocation failed
+    }
+
+    // Shift elements to the right to make space for the new pet
+    for (size_t i = v->size; i > index; i--) {
+        v->data[i] = v->data[i - 1];
+    }
+
+    v->data[index] = p;
+    v->size = v->size + 1;
+
+    return 1;
+}
 
 /*
  * Remove the pet at a specific index.
@@ -94,7 +131,19 @@ int petvec_insert(PetVec* v, size_t index, Pet p) { return 0; }
  *   1 on success
  *   0 if index is out of range
  */
-int petvec_remove(PetVec* v, size_t index) { return 0; }
+int petvec_remove(PetVec* v, size_t index) {
+    if (index >= v->size) {
+        return 0;  // Index out of range
+    }
+
+    // Shift elements to the left to fill the gap
+    for (size_t i = index; i < v->size - 1; i++) {
+        v->data[i] = v->data[i + 1];
+    }
+
+    v->size = v->size - 1;
+    return 1;
+}
 
 /*
  * Find the first pet with the given name.
@@ -103,7 +152,14 @@ int petvec_remove(PetVec* v, size_t index) { return 0; }
  *   pointer to the matching Pet
  *   NULL if no match is found
  */
-Pet* petvec_find(const PetVec* v, const char* name) { return NULL; }
+Pet* petvec_find(const PetVec* v, const char* name) {
+    for (size_t i = 0; i < v->size; i++) {
+        if (strcmp(v->data[i].name, name) == 0) {
+            return &v->data[i];
+        }
+    }
+    return NULL;
+}
 
 void petvec_print(const PetVec* v) {
     size_t i;

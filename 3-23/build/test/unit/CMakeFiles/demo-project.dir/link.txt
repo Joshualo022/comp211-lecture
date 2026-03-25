@@ -1,0 +1,1 @@
+/usr/bin/cc "CMakeFiles/demo-project.dir/src/array_utils.c.o" "CMakeFiles/demo-project.dir/src/main.c.o" "CMakeFiles/demo-project.dir/src/math_utils.c.o" -o demo-project 

@@ -1,0 +1,4 @@
+git fetch upstream
+git merge upstream/main
+
+then esc and :wq
